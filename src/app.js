@@ -1,6 +1,7 @@
  const express = require("express");
 
  const app = express();
+
 app.get("/user",(req,res)=>{
     res.send({firstName:"Ganesh", lastName: "Maske"});
  });
@@ -15,6 +16,10 @@ app.get("/user",(req,res)=>{
     res.send("Deleted successsfully!");
  });
 
+ app.get("/user/:userId/:name/:password",(req,res) =>{
+   console.log(req.params);
+   res.send({firstName:"Ganesh",lastName:"Maske"});
+ });
 
 // this will match all the HTTP method API calls to 
  app.use("/test",(req,res)=>{
