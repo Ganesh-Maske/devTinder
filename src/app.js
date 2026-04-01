@@ -1,65 +1,27 @@
- const express = require("express");
+const express = require("express");
+const connectDB = require("./config/database");
+const User = require("./model/user");  
 
- const app = express();
+const app = express();
+app.use(express.json());
 
-app.get("/user",(req,res)=>{
-    res.send({firstName:"Ganesh", lastName: "Maske"});
- });
+app.post("/signup", async (req, res) => {
+  const user = new User(req.body);
+  try {
+    await user.save();
+    res.send("user add successfully!");
+  } catch (err) {
+    res.status(400).send("Error saving the user: " + err.message);
+  }
+});
 
- app.post("/user",(req,res)=>{
-   console.log(req.body);
-   //saving data to DB
-    res.send("Data successsfully saved to the database!");
- });
-
- app.delete("/user",(req,res)=>{
-    res.send("Deleted successsfully!");
- });
-
- app.get("/user/:userId/:name/:password",(req,res) =>{
-   console.log(req.params);
-   res.send({firstName:"Ganesh",lastName:"Maske"});
- });
-
-// this will match all the HTTP method API calls to 
- app.use("/test",(req,res)=>{
-    res.send("Hello from the server!");
- });
-
- //  app.use( "/hello",(req,res)=>{
-//     res.send("Hello Hello Hello!");
-//  });
-
-//   app.use( "/",(req,res)=>{
-//     res.send("Namaste Ganesh!");
-//  });
-
-
-//("/route",rH,[rH2,rH3],rH4,rH5);
-app.use("/user",(req,res,next)=>{
-   console.log("Handling the route user!!");
-   next();
-},
-  (req,res,next)=>{
-   console.log("Handling the route user 2!!");
-   //res.send("2nd Response!!");
-   next();
- },
-  (req,res,next)=>{
-   console.log("Handling the route user 3!!");
-   //res.send("3rd Response!!");
-   next();
- },
-  (req,res,next)=>{
-   console.log("Handling the route user 4!!");
-   //res.send("4th Response!!");
-   next();
- }, (req,res,next)=>{
-   console.log("Handling the route user 5!!");
-   res.send("5th Response!!");
-   next();
- });
-
- app.listen(3000,()=>{
-    console.log("Server is Successfully listeing on port 3000...");
- });
+connectDB()
+  .then(() => {
+    console.log("Database connection established....");
+    app.listen(3000, () => {
+      console.log("Server is Successfully listening on port 3000...");
+    });
+  })
+  .catch((err) => {
+    console.error("database cannot be connected!!");
+  });
