@@ -60,6 +60,8 @@ const bcrypt = require("bcrypt");
     },
  );
   
+ //userSchema.index({firstName:1,});
+
 
 // JWT method
 userSchema.methods.getJWT = async function () {
